@@ -3,19 +3,26 @@ local TweenService = game:GetService("TweenService")
 local gui = Instance.new("ScreenGui")
 local GazerMain = Instance.new("Frame")
 local GazerTitle = Instance.new("TextLabel")
+local GazerTitle2 = Instance.new("TextLabel")
 local TextBax = Instance.new("TextBox")
 local chat = Instance.new("TextButton")
 local UICornerMain = Instance.new("UICorner")
 local UICornerTitle = Instance.new("UICorner")
+
 local UICornerTextBax = Instance.new("UICorner")
 local UICornerChat = Instance.new("UICorner")
 local GazerIcon = Instance.new("ImageLabel") -- Icon beside the title
 local toggleScrollFrameBtn = Instance.new("TextButton") -- Button to toggle scroll frame
+local clearButton = Instance.new("TextButton")
+local undoButton = Instance.new("TextButton")
+local redoButton = Instance.new("TextButton")
 local scrollFrame = Instance.new("ScrollingFrame") -- Scroll frame container
 local UICornerToggleBtn = Instance.new("UICorner")
+local UICornerClear = Instance.new("UICorner")
+local UICornerUndo = Instance.new("UICorner")
 
 gui.Name = "GazerGui"
-gui.Parent = cloneref(game:GetService("CoreGui"))
+gui.Parent = cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui") 
 
 -- Main Frame (Dark Mode)
 GazerMain.Size = UDim2.new(0.5, 0, 0.5, 0)
@@ -39,12 +46,24 @@ GazerTitle.TextColor3 = Color3.new(1, 1, 1)
 GazerTitle.Font = Enum.Font.Bodoni
 GazerTitle.Parent = GazerMain
 
+
+GazerTitle2.Size = UDim2.new(0.5, 0, 0.1, 0)
+GazerTitle2.Position = UDim2.new(1.1, 0, 0, 0)
+GazerTitle2.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+GazerTitle2.BorderColor3 = Color3.fromRGB(60, 60, 60)
+GazerTitle2.BorderSizePixel = 1
+GazerTitle2.Text = "Examples"
+GazerTitle2.TextSize = 20
+GazerTitle2.TextColor3 = Color3.new(1, 1, 1)
+GazerTitle2.Font = Enum.Font.Bodoni
+GazerTitle2.Parent = GazerMain
+
 -- Adding rounded corners to Title
 UICornerTitle.CornerRadius = UDim.new(0, 10)
 UICornerTitle.Parent = GazerTitle
 
 -- Icon beside the Title
-GazerIcon.Size = UDim2.new(0.15, 0, 0.2, 0)
+GazerIcon.Size = UDim2.new(0.15, 0, 0.25, 0)
 GazerIcon.Position = UDim2.new(0.85, 0, 0, 0)
 GazerIcon.Image = "rbxassetid://109127513604501"
 GazerIcon.BackgroundTransparency = 1
@@ -59,6 +78,7 @@ TextBax.BorderSizePixel = 1
 TextBax.PlaceholderText = "(Chat)"
 TextBax.TextColor3 = Color3.new(1, 1, 1)
 TextBax.Font = Enum.Font.Code
+TextBax.ClearTextOnFocus = false
 TextBax.Text = ""
 TextBax.TextSize = 18
 TextBax.Parent = GazerMain
@@ -73,10 +93,81 @@ toggleScrollFrameBtn.TextSize = 18
 toggleScrollFrameBtn.TextColor3 = Color3.new(1, 1, 1)
 toggleScrollFrameBtn.Font = Enum.Font.Code
 toggleScrollFrameBtn.Parent = GazerMain
+-- Assuming TextBax is already defined and configured as in your code
+
+-- Tables to store the history of text changes
+local undoHistory = {}
+local redoHistory = {}
+
+-- Function to handle text changes and save to history
+local function onTextChanged()
+    TextBax:GetPropertyChangedSignal("Text"):Connect(function()
+        table.insert(undoHistory, TextBax.Text)
+        
+    end)
+end
+
+-- Function to undo the last text change
+local function undoTextChange()
+    if #undoHistory > 1 then
+        local currentText = table.remove(undoHistory) -- Remove the current text
+        table.insert(redoHistory, currentText) -- Save it to the redo history
+        TextBax.Text = undoHistory[#undoHistory] -- Set the text to the last saved state
+    end
+end
+
+-- Function to redo the last undone text change
+
+
+-- Call the function to set up the event listener
+onTextChanged()
+
+-- Create an undo button
+
+undoButton.Size = UDim2.new(0.2, 0, 0.2, 0)
+undoButton.Position = UDim2.new(0.1, 0, 0.55, 0)
+undoButton.Text = "Undo"
+undoButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+undoButton.BorderColor3 = Color3.fromRGB(70, 70, 70)
+undoButton.TextSize = 18
+undoButton.TextColor3 = Color3.new(1, 1, 1)
+undoButton.Font = Enum.Font.Code
+undoButton.Parent = GazerMain
+
+undoButton.MouseButton1Click:Connect(function()
+    undoTextChange()
+end)
+
+
+
+redoButton.MouseButton1Click:Connect(function()
+    redoTextChange()
+end)
+
+-- Initialize the undo history with the initial text
+table.insert(undoHistory, TextBax.Text)
+
+clearButton.Size = UDim2.new(0.2, 0, 0.2, 0)
+clearButton.Position = UDim2.new(0.1, 0, 0.8, 0)
+clearButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+clearButton.BorderColor3 = Color3.fromRGB(70, 70, 70)
+clearButton.Text = "Clear"
+clearButton.TextSize = 18
+clearButton.TextColor3 = Color3.new(1, 1, 1)
+clearButton.Font = Enum.Font.Code
+clearButton.Parent = GazerMain
+
 
 -- Adding rounded corners to Toggle Button
 UICornerToggleBtn.CornerRadius = UDim.new(0, 10)
 UICornerToggleBtn.Parent = toggleScrollFrameBtn
+
+UICornerClear.CornerRadius = UDim.new(0, 10)
+UICornerClear.Parent = clearButton
+
+
+UICornerUndo.CornerRadius = UDim.new(0, 10)
+UICornerUndo.Parent = undoButton
 
 -- Scroll Frame
 scrollFrame.Size = UDim2.new(0.5, 0, 0.9, 0)
@@ -94,6 +185,12 @@ scrollFrame.ScrollBarThickness = 8
 -- Function to toggle the ScrollFrame visibility
 toggleScrollFrameBtn.MouseButton1Click:Connect(function()
     scrollFrame.Visible = not scrollFrame.Visible
+    GazerTitle2.Visible = not GazerTitle2.Visible
+end)
+
+
+clearButton.MouseButton1Click:Connect(function()
+    TextBax.Text = ""
 end)
 
 -- Function to create a TextButton inside the ScrollFrame and print the button's text on click
@@ -126,16 +223,14 @@ end
 
 -- Example usage: Create some buttons in the scroll frame (you can remove or modify this part)
 
-    addTextButtonToScrollFrame("Gaze Bypass V3 Is Fucking Shitd")
+    addTextButtonToScrollFrame("Gaze Bypass V3, Is What Im Using Right Now")
     addTextButtonToScrollFrame("The Emoji Support Is Fucking Crazy 💀")
     addTextButtonToScrollFrame("You have no bitches for real bro?")
-    addTextButtonToScrollFrame("No Way Its Actually Fucking Work")
-    addTextButtonToScrollFrame("You Know what?, I Fucking Love Myself")
+    addTextButtonToScrollFrame("No Way This Shit Is Working")
     addTextButtonToScrollFrame("Just Testing My Shits Rn")
     addTextButtonToScrollFrame("ahh.. i think its a fucking lovely day!")
     addTextButtonToScrollFrame("do you know what nigga n mean?")
-    addTextButtonToScrollFrame("selling children's kidneys for only 2 $")
-    addTextButtonToScrollFrame("Im So Fucking Stressed Right Now..")
+    addTextButtonToScrollFrame("selling my kidneys for only 2 $")
     addTextButtonToScrollFrame("(Abcde) do You learning Alphabets Asshole?")
     addTextButtonToScrollFrame((identifyexecutor() or "My Executor") .. " Is Fucking Great")
     addTextButtonToScrollFrame("Alright.. How About Porn?")
@@ -144,7 +239,10 @@ end
     addTextButtonToScrollFrame("162.832.069 test ip fuckers")
     addTextButtonToScrollFrame("Ohh.. I Fucking Love shrek")
     addTextButtonToScrollFrame("Sir, You're arrested For Grooming A Minors")
-    addTextButtonToScrollFrame("Oh No, What The Fuck Did I Do?")
+    addTextButtonToScrollFrame("Yooo, What's up?, motherfuckers!")
+    addTextButtonToScrollFrame("Sir?, Please Shut the fuck up Already")
+    addTextButtonToScrollFrame("Stop Being Asshole")
+    addTextButtonToScrollFrame("Please Stop Banging My Ass, Its Hurt..")
    
     addTextButtonToScrollFrame("Look What I Draw, A Penis -> {ूाीू }")
     addTextButtonToScrollFrame("What the fuck, did i just saw?")
@@ -687,7 +785,7 @@ local function modifyText(input)
     end
 
     result = result:gsub("{", ""):gsub("}", "")
-    local A_1 = result
+    local A_1 =  result
     local A_2 = "All"
     if game:GetService("TextChatService"):FindFirstChild("TextChannels") then
         game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(A_1)
