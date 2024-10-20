@@ -13,9 +13,7 @@ local UICornerTextBax = Instance.new("UICorner")
 local UICornerChat = Instance.new("UICorner")
 local GazerIcon = Instance.new("ImageLabel") -- Icon beside the title
 local toggleScrollFrameBtn = Instance.new("TextButton") -- Button to toggle scroll frame
-local clearButton = Instance.new("TextButton")
-local undoButton = Instance.new("TextButton")
-local redoButton = Instance.new("TextButton")
+
 local scrollFrame = Instance.new("ScrollingFrame") -- Scroll frame container
 local UICornerToggleBtn = Instance.new("UICorner")
 local UICornerClear = Instance.new("UICorner")
@@ -78,7 +76,7 @@ TextBax.BorderSizePixel = 1
 TextBax.PlaceholderText = "(Chat)"
 TextBax.TextColor3 = Color3.new(1, 1, 1)
 TextBax.Font = Enum.Font.Code
-TextBax.ClearTextOnFocus = false
+TextBax.ClearTextOnFocus = true
 TextBax.Text = ""
 TextBax.TextSize = 18
 TextBax.Parent = GazerMain
@@ -96,78 +94,12 @@ toggleScrollFrameBtn.Parent = GazerMain
 -- Assuming TextBax is already defined and configured as in your code
 
 -- Tables to store the history of text changes
-local undoHistory = {}
-local redoHistory = {}
-
--- Function to handle text changes and save to history
-local function onTextChanged()
-    TextBax:GetPropertyChangedSignal("Text"):Connect(function()
-        table.insert(undoHistory, TextBax.Text)
-        
-    end)
-end
-
--- Function to undo the last text change
-local function undoTextChange()
-    if #undoHistory > 1 then
-        local currentText = table.remove(undoHistory) -- Remove the current text
-        table.insert(redoHistory, currentText) -- Save it to the redo history
-        TextBax.Text = undoHistory[#undoHistory] -- Set the text to the last saved state
-    end
-end
-
--- Function to redo the last undone text change
-
-
--- Call the function to set up the event listener
-onTextChanged()
-
--- Create an undo button
-
-undoButton.Size = UDim2.new(0.2, 0, 0.2, 0)
-undoButton.Position = UDim2.new(0.1, 0, 0.55, 0)
-undoButton.Text = "Undo"
-undoButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-undoButton.BorderColor3 = Color3.fromRGB(70, 70, 70)
-undoButton.TextSize = 18
-undoButton.TextColor3 = Color3.new(1, 1, 1)
-undoButton.Font = Enum.Font.Code
-undoButton.Parent = GazerMain
-
-undoButton.MouseButton1Click:Connect(function()
-    undoTextChange()
-end)
-
-
-
-redoButton.MouseButton1Click:Connect(function()
-    redoTextChange()
-end)
-
--- Initialize the undo history with the initial text
-table.insert(undoHistory, TextBax.Text)
-
-clearButton.Size = UDim2.new(0.2, 0, 0.2, 0)
-clearButton.Position = UDim2.new(0.1, 0, 0.8, 0)
-clearButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-clearButton.BorderColor3 = Color3.fromRGB(70, 70, 70)
-clearButton.Text = "Clear"
-clearButton.TextSize = 18
-clearButton.TextColor3 = Color3.new(1, 1, 1)
-clearButton.Font = Enum.Font.Code
-clearButton.Parent = GazerMain
 
 
 -- Adding rounded corners to Toggle Button
 UICornerToggleBtn.CornerRadius = UDim.new(0, 10)
 UICornerToggleBtn.Parent = toggleScrollFrameBtn
 
-UICornerClear.CornerRadius = UDim.new(0, 10)
-UICornerClear.Parent = clearButton
-
-
-UICornerUndo.CornerRadius = UDim.new(0, 10)
-UICornerUndo.Parent = undoButton
 
 -- Scroll Frame
 scrollFrame.Size = UDim2.new(0.5, 0, 0.9, 0)
@@ -189,9 +121,7 @@ toggleScrollFrameBtn.MouseButton1Click:Connect(function()
 end)
 
 
-clearButton.MouseButton1Click:Connect(function()
-    TextBax.Text = ""
-end)
+
 
 -- Function to create a TextButton inside the ScrollFrame and print the button's text on click
 local buttonCount = 0
@@ -214,6 +144,11 @@ task.wait()
 
     -- Print the button's text when clicked
     textButton.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(TextBax.Text)
+    else
+        print(TextBax.Text)
+    end
         TextBax.Text = textButton.Text
     end)
 
@@ -225,10 +160,10 @@ end
 
     addTextButtonToScrollFrame("Gaze Bypass V3, Is What Im Using Right Now")
     addTextButtonToScrollFrame("The Emoji Support Is Fucking Crazy 💀")
+    addTextButtonToScrollFrame("awhh... damn.")
     addTextButtonToScrollFrame("You have no bitches for real bro?")
     addTextButtonToScrollFrame("No Way This Shit Is Working")
     addTextButtonToScrollFrame("Just Testing My Shits Rn")
-    addTextButtonToScrollFrame("ahh.. i think its a fucking lovely day!")
     addTextButtonToScrollFrame("do you know what nigga n mean?")
     addTextButtonToScrollFrame("selling my kidneys for only 2 $")
     addTextButtonToScrollFrame("(Abcde) do You learning Alphabets Asshole?")
