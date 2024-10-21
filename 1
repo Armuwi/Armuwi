@@ -693,7 +693,6 @@ local function modifyText(input)
     input = input:lower()
 
     for word, replacement in pairs(replacements) do
-    task.wait()
         input = input:gsub(word, "{" .. replacement .. "}")
     end
     
@@ -713,7 +712,7 @@ local function modifyText(input)
             result = result .. "\b"
         else
             result = result .. char
-            if i < #input and input:sub(i + 1, i + 1) ~= "" then
+            if i < #input and input:sub(i + 1, i + 1) ~= "\b" then
                 result = result .. "￴"
             end
         end
