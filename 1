@@ -1,3 +1,45 @@
+if not game:IsLoaded() then
+    game.IsLoaded:Wait()
+end
+
+
+    function makeMessage(message)
+        msg = tostring(message)
+        if game:GetService("TextChatService").TextChannels:FindFirstChild("RBXGeneral") then
+            game:GetService("TextChatService").TextChannels:FindFirstChild("RBXGeneral"):DisplaySystemMessage(msg)
+            else
+        game:GetService("StarterGui"):SetCore(
+            "ChatMakeSystemMessage",
+            {
+                Text = msg,
+                Color = Color3.fromRGB(255, 89, 98),
+                Font = Enum.Font.GothamMedium,
+                FontSize = 16
+            }
+        )
+        end
+    end
+    
+local guiName = "GazeGayUI"
+local coreGay = game:GetService("CoreGui")
+
+
+if not coreGay:FindFirstChild(guiName) then
+   
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = guiName  
+
+    
+    screenGui.Parent = coreGay
+
+    makeMessage("Gaze bypass loaded.")
+else
+   
+    makeMessage("Gaze bypass is already executed..")
+    return
+end
+
+
 local TweenService = game:GetService("TweenService")
 
 local gui = Instance.new("ScreenGui")
@@ -22,7 +64,7 @@ local UICornerUndo = Instance.new("UICorner")
 gui.Name = "GazerGui"
 gui.Parent = cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui") 
 
--- Main Frame (Dark Mode)
+
 GazerMain.Size = UDim2.new(0.5, 0, 0.5, 0)
 GazerMain.Position = UDim2.new(0.25, 0, 0.25, 0)
 GazerMain.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -32,7 +74,7 @@ GazerMain.Active = true
 GazerMain.Draggable = true
 GazerMain.Parent = gui
 
--- Title
+
 GazerTitle.Size = UDim2.new(0.85, 0, 0.2, 0) -- Adjust width for icon
 GazerTitle.Position = UDim2.new(0, 0, 0, 0)
 GazerTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
@@ -56,18 +98,18 @@ GazerTitle2.TextColor3 = Color3.new(1, 1, 1)
 GazerTitle2.Font = Enum.Font.Bodoni
 GazerTitle2.Parent = GazerMain
 
--- Adding rounded corners to Title
+
 UICornerTitle.CornerRadius = UDim.new(0, 10)
 UICornerTitle.Parent = GazerTitle
 
--- Icon beside the Title
+
 GazerIcon.Size = UDim2.new(0.15, 0, 0.25, 0)
 GazerIcon.Position = UDim2.new(0.85, 0, 0, 0)
 GazerIcon.Image = "rbxassetid://109127513604501"
 GazerIcon.BackgroundTransparency = 1
 GazerIcon.Parent = GazerMain
 
--- TextBox
+
 TextBax.Size = UDim2.new(0.8, 0, 0.2, 0)
 TextBax.Position = UDim2.new(0.1, 0, 0.3, 0)
 TextBax.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
@@ -91,9 +133,6 @@ toggleScrollFrameBtn.TextSize = 18
 toggleScrollFrameBtn.TextColor3 = Color3.new(1, 1, 1)
 toggleScrollFrameBtn.Font = Enum.Font.Code
 toggleScrollFrameBtn.Parent = GazerMain
--- Assuming TextBax is already defined and configured as in your code
-
--- Tables to store the history of text changes
 
 
 -- Adding rounded corners to Toggle Button
@@ -110,11 +149,11 @@ scrollFrame.BorderSizePixel = 1
 scrollFrame.Visible = true -- Initially hidden
 scrollFrame.Parent = GazerMain
 
--- Enable scrolling within the scroll frame
+
 scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0) -- We will adjust this as buttons are added
 scrollFrame.ScrollBarThickness = 8
 
--- Function to toggle the ScrollFrame visibility
+
 toggleScrollFrameBtn.MouseButton1Click:Connect(function()
     scrollFrame.Visible = not scrollFrame.Visible
     GazerTitle2.Visible = not GazerTitle2.Visible
@@ -123,7 +162,7 @@ end)
 
 
 
--- Function to create a TextButton inside the ScrollFrame and print the button's text on click
+
 local buttonCount = 0
 local function addTextButtonToScrollFrame(text)
 task.wait()
@@ -142,17 +181,17 @@ task.wait()
     textButton.Font = Enum.Font.Code
     textButton.Parent = scrollFrame
 
-    -- Print the button's text when clicked
+    
     textButton.MouseButton1Click:Connect(function()
         print(TextBax.Text)
         TextBax.Text = textButton.Text
     end)
 
-    -- Update scroll frame CanvasSize to accommodate the new button
+    
     scrollFrame.CanvasSize = UDim2.new(0, 0, 0, buttonCount * 45)
 end
 
--- Example usage: Create some buttons in the scroll frame (you can remove or modify this part)
+
 
     addTextButtonToScrollFrame("Gaze Bypass V3, Is What Im Using Right Now")
     addTextButtonToScrollFrame("The Emoji Support Is Fucking Crazy 💀")
@@ -485,14 +524,14 @@ local function isEmoji(c)
     local code = utf8.codepoint(c)  
 
     
-    if (code >= 0x1F600 and code <= 0x1F64F) or  -- Emoticons
-       (code >= 0x1F300 and code <= 0x1F5FF) or  -- Miscellaneous Symbols and Pictographs
-       (code >= 0x1F680 and code <= 0x1F6FF) or  -- Transport and Map Symbols
-       (code >= 0x1F700 and code <= 0x1F77F) or  -- Alchemical Symbols
-       (code >= 0x1F900 and code <= 0x1F9FF) or  -- Supplemental Symbols and Pictographs
-       (code >= 0x2600 and code <= 0x26FF) or    -- Miscellaneous Symbols
-       (code >= 0x2700 and code <= 0x27BF) or    -- Dingbats
-       (code >= 0x1F1E6 and code <= 0x1F1FF) then -- Regional Indicator Symbols (flags)
+    if (code >= 0x1F600 and code <= 0x1F64F) or  
+       (code >= 0x1F300 and code <= 0x1F5FF) or  
+       (code >= 0x1F680 and code <= 0x1F6FF) or  
+       (code >= 0x1F700 and code <= 0x1F77F) or  
+       (code >= 0x1F900 and code <= 0x1F9FF) or  
+       (code >= 0x2600 and code <= 0x26FF) or    
+       (code >= 0x2700 and code <= 0x27BF) or    
+       (code >= 0x1F1E6 and code <= 0x1F1FF) then 
         return true  
     end
     return false  
@@ -502,7 +541,7 @@ end
 
 
 local function modifyText(input)
-    -- Define replacement words
+    
     local replacements = {
         ass = "a￴s￴￴￴s￴￴￴",
         fuck = "f￴￴￴￴￴￴u￴c￴k￴￴￴",
@@ -563,7 +602,7 @@ local function modifyText(input)
             result = result .. "\b"  
         else
             result = result .. char
-            if i < #modifiedInput and modifiedInput:sub(i + 1, i + 1) ~= "/b" then
+            if i < #modifiedInput and modifiedInput:sub(i + 1, i + 1) ~= " " then
                 result = result .. "￴"  -- Add the obfuscating character between non-space characters
             end
         end
@@ -603,3 +642,5 @@ chat.MouseButton1Click:Connect(function()
         chat.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Reset to original color
     end)
 end)
+
+
