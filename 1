@@ -32,10 +32,10 @@ if not coreGay:FindFirstChild(guiName) then
     
     screenGui.Parent = coreGay
 
-    makeMessage("Gaze bypass loaded.")
+    makeMessage("•   Gaze bypass loaded.")
 else
    
-    makeMessage("Gaze bypass is already executed..")
+    makeMessage("•   Gaze bypass is already executed..")
     return
 end
 
@@ -541,7 +541,6 @@ end
 
 
 local function modifyText(input)
-    
     local replacements = {
         ass = "a￴s￴￴￴s￴￴￴",
         fuck = "f￴￴￴￴￴￴u￴c￴k￴￴￴",
@@ -549,8 +548,8 @@ local function modifyText(input)
         shit = "s￴￴￴￴￴￴h￴i￴t￴￴￴",
         porn = "p￴￴￴￴￴￴o￴r￴n￴￴￴",
         bitch = "b￴i￴t￴￴￴c￴h￴",
-       nigg = "n￴i￴g￴￴￴￴￴￴g￴￴￴",
-       dick = "d￴i￴￴c￴k￴￴￴",
+        nigg = "n￴i￴g￴￴￴￴￴￴g￴￴￴",
+        dick = "d￴i￴￴c￴k￴￴￴",
         gay = "g￴a￴￴y￴￴￴",
         sex = "s￴e￴￴x￴￴￴",
         ["0"] = "０￴",
@@ -565,33 +564,48 @@ local function modifyText(input)
         ["9"] = "９￴",
     }
 
-    
     local lowerInput = input:lower()
 
-    
+    -- Count non-brace characters
+    local count = 0
+    for i = 1, #input do
+        local char = input:sub(i, i)
+        if char ~= "{" and char ~= "}" then
+            count = count + 1
+        end
+    end
+
+    -- Adjust space insertion based on count
+    local small, medium, high = false, false, false
+    if count < 10 then
+        small = true
+    elseif count >= 10 and count < 15 then
+        medium = true
+    elseif count >= 15 then
+        high = true
+    end
+
+    -- Replace specific words
     for word, replacement in pairs(replacements) do
         lowerInput = lowerInput:gsub(word, "{" .. replacement .. "}")
     end
 
-    
+    -- Handle emojis (assuming isEmoji function is defined elsewhere)
     local emojiPattern = "[%z\1-\127\194-\244][\128-\191]*"
-
-    
     local modifiedInput = lowerInput:gsub(emojiPattern, function(c)
         if isEmoji(c) then
-            return "{" .. c .. "}"  -- Enclose the emoji in braces
+            return "{" .. c .. "}"
         end
-        return c  -- Return the character as it is if not an emoji
+        return c
     end)
 
-    
+    -- Process characters for the final result
     local result = ""
     local insideReplacedWord = false
 
     for i = 1, #modifiedInput do
         local char = modifiedInput:sub(i, i)
 
-        
         if char == "{" then
             insideReplacedWord = true
         elseif char == "}" then
@@ -599,23 +613,29 @@ local function modifyText(input)
         elseif insideReplacedWord then
             result = result .. char
         elseif char == " " then
-            result = result .. "\b"  
+            result = result .. "\b"
         else
             result = result .. char
+            -- Add spaces based on small, medium, and high conditions
             if i < #modifiedInput and modifiedInput:sub(i + 1, i + 1) ~= " " then
-                result = result .. "￴"  -- Add the obfuscating character between non-space characters
+                if small then
+                    result = result .. "￴￴"
+                elseif medium then
+                    result = result .. "￴￴"
+                elseif high then
+                    result = result .. "￴"
+                end
             end
         end
     end
 
-    
+    -- Remove braces
     result = result:gsub("{", ""):gsub("}", "")
 
-    
+    -- Send result in chat
     local A_1 = result
     local A_2 = "All"
-    
-    
+
     if game:GetService("TextChatService"):FindFirstChild("TextChannels") then
         game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(A_1)
     else
