@@ -547,26 +547,26 @@ end
 
 local function modifyText(input)
     local replacements = {
-        ass = "a￴s￴￴￴s￴￴￴",
-        fuck = "f￴￴￴￴￴￴u￴c￴k￴￴￴",
-        damn = "d￴￴￴￴￴￴a￴￴m￴￴n",
-        shit = "s￴￴￴￴￴￴h￴i￴t￴￴￴",
-        porn = "p￴￴￴￴￴￴o￴r￴n￴￴￴",
-        bitch = "b￴i￴t￴￴￴c￴h￴",
-        nigg = "n￴i￴g￴￴￴￴￴￴g￴￴￴",
-        dick = "d￴i￴￴c￴k￴￴￴",
-        gay = "g￴a￴￴y￴￴￴",
-        sex = "s￴e￴￴x￴￴￴",
-        ["0"] = "０￴",
-        ["1"] = "１￴",
-        ["2"] = "２￴",
-        ["3"] = "３￴",
-        ["4"] = "４￴",
-        ["5"] = "５￴",
-        ["6"] = "６￴",
-        ["7"] = "７￴",
-        ["8"] = "８￴",
-        ["9"] = "９￴",
+        ass = "a\xEF\xBF\xB8s\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8s\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        fuck = "f\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8u\xEF\xBF\xB8c\xEF\xBF\xB8k\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        damn = "d\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8a\xEF\xBF\xB8\xEF\xBF\xB8m\xEF\xBF\xB8\xEF\xBF\xB8n",
+        shit = "s\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8h\xEF\xBF\xB8i\xEF\xBF\xB8t\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        porn = "p\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8o\xEF\xBF\xB8r\xEF\xBF\xB8n\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        bitch = "b\xEF\xBF\xB8i\xEF\xBF\xB8t\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8c\xEF\xBF\xB8h\xEF\xBF\xB8",
+        nigg = "n\xEF\xBF\xB8i\xEF\xBF\xB8g\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8g\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        dick = "d\xEF\xBF\xB8i\xEF\xBF\xB8\xEF\xBF\xB8c\xEF\xBF\xB8k\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        gay = "g\xEF\xBF\xB8a\xEF\xBF\xB8\xEF\xBF\xB8y\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        sex = "s\xEF\xBF\xB8e\xEF\xBF\xB8\xEF\xBF\xB8x\xEF\xBF\xB8\xEF\xBF\xB8\xEF\xBF\xB8",
+        ["0"] = "０\xEF\xBF\xB8",
+        ["1"] = "１\xEF\xBF\xB8",
+        ["2"] = "２\xEF\xBF\xB8",
+        ["3"] = "３\xEF\xBF\xB8",
+        ["4"] = "４\xEF\xBF\xB8",
+        ["5"] = "５\xEF\xBF\xB8",
+        ["6"] = "６\xEF\xBF\xB8",
+        ["7"] = "７\xEF\xBF\xB8",
+        ["8"] = "８\xEF\xBF\xB8",
+        ["9"] = "９\xEF\xBF\xB8",
     }
 
     local lowerInput = input:lower()
@@ -618,21 +618,15 @@ local function modifyText(input)
         elseif insideReplacedWord then
             result = result .. char
         elseif char == " " then
-            result = result .. "\b"
+            result = result .. "\xEF\xBF\xB8\b\xEF\xBF\xB8"
         else
             result = result .. char
             -- Add spaces based on small, medium, and high conditions
             if i < #modifiedInput and modifiedInput:sub(i + 1, i + 1) ~= " " then
-                if small then
-                    result = result .. "￴￴"
-                elseif medium then
-                    result = result .. "￴￴"
-                elseif high then
-                    result = result .. "￴"
+                    result = result .. "\xEF\xBF\xB8"
                 end
             end
         end
-    end
 
     -- Remove braces
     result = result:gsub("{", ""):gsub("}", "")
@@ -667,5 +661,4 @@ chat.MouseButton1Click:Connect(function()
         chat.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Reset to original color
     end)
 end)
-
 
